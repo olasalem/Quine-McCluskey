@@ -20,7 +20,7 @@ def bitdif(i,j):
 	#str1 = bin(i)
 	#str2 = bin(j)
 	for x,s in enumerate(difflib.ndiff(str1,str2)):
-		print "X is: ",x
+		#print "X is: ",x
 		if s[0] == " ":
 			xstr += str1[x]
 		#print str1[i]
@@ -29,6 +29,24 @@ def bitdif(i,j):
 		#print i,j,xstr
 	coloumns[xstr] = (i,j)
 	return
+def Xor(n,str1, str2):
+	str1 = str1.replace("0b","")
+	str2 = str2.replace("0b","")
+	str1 = ''.join(['0']*(n-len(str1))) + str1
+	str2 = ''.join(['0']*(n-len(str2))) + str2
+	
+	lstXor = list()
+	for i in range (0,len(str1)):
+		if(str1[i] != str2[i]):
+			lstXor.append(n-(i+1))
+	if(len(lstXor)==0): return -2
+	elif(len(lstXor)==1): return lstXor[0]
+	else: return -1
+
+# input = raw_input().split(' ')
+# str1 = bin(int(input[0]))
+# str2 = bin(int(input[1]))
+# print Xor(8,str1,str2)
 print "Minterms:"
 minterms = map(int , raw_input().split(","))
 #print minterms
@@ -78,6 +96,17 @@ for key in sorted(d):
 					#mcol[key].append()
 					bitdif(i,j)
 primeimplicants = [x for x in minterms if x not in taken]
-#print coloumns
+# for x in enumerate(coloumns.keys()):
+#  	if x[0]+1 > len(coloumns):
+#  		print x[0]+1
+# for key in enumerate(coloumns.keys()):
+# 	if (key[0]+2) < len(coloumns):
+# 		Xor(maxPower,coloumns[key[1]],coloumns[])
 #print primeimplicants
 #print primeimplicants
+print coloumns
+coloumns = {x : coloumns[x] for x in sorted(coloumns.keys(), key = lambda key: key.count('1'))}
+print coloumns
+# for key in range(0,len(coloumns.keys())):
+# 	if coloumns.items()[key+1] is not None:
+
