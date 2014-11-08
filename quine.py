@@ -1,12 +1,24 @@
 from collections import defaultdict
 from math import log, ceil
 #n = raw_input()
-def Xor(str1, str2):
-	str1.replace("0b","")
-	str2.replace("0b","")
+def Xor(n,str1, str2):
+	str1 = str1.replace("0b","")
+	str2 = str2.replace("0b","")
+	str1 = ''.join(['0']*(n-len(str1))) + str1
+	str2 = ''.join(['0']*(n-len(str2))) + str2
+	
+	lstXor = list()
+	for i in range (0,len(str1)):
+		if(str1[i] != str2[i]):
+			lstXor.append(n-(i+1))
+	if(len(lstXor)==0): return -2
+	elif(len(lstXor)==1): return lstXor[0]
+	else: return -1
 
-
-
+input = raw_input().split(' ')
+str1 = bin(int(input[0]))
+str2 = bin(int(input[1]))
+print Xor(8,str1,str2)
 
 
 print "Minterms:"
@@ -43,17 +55,11 @@ primeimplicants = list()
 for key in sorted(d):
 	#iterate over each list and thenext list
 	if not d[key] or not d[key+1]:
-		"""for item in d[key]:
-			primeimplicants.append(item)""" 
-		continue
-	else:
 		mcol = defaultdict(list)
 		for i in d[key]:
 			for j in d[key+1]:
 				if (bin(i^j).count("1")==1):
 					print i, j, "IT IS WORKING :D"
-					#mcol[key].append()
+					
 #print primeimplicants
-
-
 	
