@@ -130,12 +130,15 @@ for key in range(0,len(coloumns.keys())-1):
  		# for i in coloumns.keys()[key]:
  		# 	for j in coloumns.keys()[key+1]:
  		# 
- 		bitloc = Xor(maxPower,coloumns.keys()[key],coloumns.keys()[key+1])
- 		if bitloc != -2 and bitloc != -1:
- 			tkey = list(coloumns.key()[key])
- 			tkey = "-"
- 			tkey = ''.join(coloumns.keys()[key])
+ 		bitloc = Xor(int(maxPower),coloumns.keys()[key],coloumns.keys()[key+1])
+ 		print bitloc , coloumns.items()[key] , coloumns.items()[key+1]
+ 		if bitloc != -2 and  bitloc != -1:
+ 			tkey = list(coloumns.keys()[key])
+ 			#print tkey
+ 			tkey [int(maxPower)-1-bitloc]= "-"
+ 			#print tkey
+ 			tkey = ''.join(tkey)
  			taken.append(coloumns.items()[key])
  			taken.append(coloumns.items()[key+1])
- 			coloumns[tkey] = coloumns.items()[key] + coloumns.items()[key+1]
+ 			coloumns[tkey] = coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[key+1]]
 print coloumns
