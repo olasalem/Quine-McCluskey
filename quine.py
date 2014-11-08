@@ -6,6 +6,7 @@ import difflib
 	str1.replace("0b","")
 	str2.replace("0b","")
 """
+coloumns = dict()
 def bitdif(i,j):
 	str1 = bin(i)
 	str2 = bin(j)
@@ -14,11 +15,12 @@ def bitdif(i,j):
 	str2 = str2.replace("0b","")
 	str1 = ''.join(['0']*(maxPower-len(str1))) + str1
 	str2 = ''.join(['0']*(maxPower-len(str2))) + str2
-	#print str1,str2
+	print "Strings are: ",str1,str2
 	xstr = ""
 	#str1 = bin(i)
 	#str2 = bin(j)
 	for x,s in enumerate(difflib.ndiff(str1,str2)):
+		print "X is: ",x
 		if s[0] == " ":
 			xstr += str1[x]
 		#print str1[i]
@@ -29,8 +31,8 @@ def bitdif(i,j):
 	return
 print "Minterms:"
 minterms = map(int , raw_input().split(","))
-print minterms
-print max(minterms)
+#print minterms
+#print max(minterms)
 #print log(max(minterms)+1,2) For testing
 maxPower = int(log(max(minterms)+1,2))+1
 d = defaultdict(list)
@@ -56,12 +58,11 @@ print maxPower
 print d.items()
 #if  d[0]:
 #	print d[0] #Testing
-coloumns = dict()
 primeimplicants = list()
 taken = list()
 for key in sorted(d):
 	#iterate over each list and thenext list
-	if   d[key+1] is not None:
+	if d[key+1] is not None:
 	#	continue
 	#else:
 		print d[key]
@@ -77,10 +78,6 @@ for key in sorted(d):
 					#mcol[key].append()
 					bitdif(i,j)
 primeimplicants = [x for x in minterms if x not in taken]
-print coloumns
-print primeimplicants
-					
+#print coloumns
 #print primeimplicants
-
-
-	
+#print primeimplicants
