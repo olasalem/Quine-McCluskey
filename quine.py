@@ -1,8 +1,11 @@
 from collections import defaultdict
 from math import log, ceil
 import difflib
-
-
+#n = raw_input()
+"""def Xor(str1, str2):
+	str1.replace("0b","")
+	str2.replace("0b","")
+"""
 coloumns = dict()
 def bitdif(i,j):
 	str1 = bin(i)
@@ -10,24 +13,6 @@ def bitdif(i,j):
 	#print str1,str2
 	str1 = str1.replace("0b","")
 	str2 = str2.replace("0b","")
-	str1 = ''.join(['0']*(n-len(str1))) + str1
-	str2 = ''.join(['0']*(n-len(str2))) + str2
-	
-	lstXor = list()
-	for i in range (0,len(str1)):
-		if(str1[i] != str2[i]):
-			lstXor.append(n-(i+1))
-	if(len(lstXor)==0): return -2
-	elif(len(lstXor)==1): return lstXor[0]
-	else: return -1
-
-#input = raw_input().split(' ')
-#str1 = bin(int(input[0]))
-#str2 = bin(int(input[1]))
-#print Xor(8,str1,str2)
-
-
-=======
 	str1 = ''.join(['0']*(maxPower-len(str1))) + str1
 	str2 = ''.join(['0']*(maxPower-len(str2))) + str2
 	print "Strings are: ",str1,str2
