@@ -15,10 +15,10 @@ def Xor(n,str1, str2):
 	elif(len(lstXor)==1): return lstXor[0]
 	else: return -1
 
-input = raw_input().split(' ')
-str1 = bin(int(input[0]))
-str2 = bin(int(input[1]))
-print Xor(8,str1,str2)
+#input = raw_input().split(' ')
+#str1 = bin(int(input[0]))
+#str2 = bin(int(input[1]))
+#print Xor(8,str1,str2)
 
 
 print "Minterms:"
@@ -60,6 +60,6 @@ for key in sorted(d):
 			for j in d[key+1]:
 				if (bin(i^j).count("1")==1):
 					print i, j, "IT IS WORKING :D"
-					
-#print primeimplicants
-	
+
+
+
