@@ -7,28 +7,29 @@ import difflib
 	str2.replace("0b","")
 """
 coloumns = dict()
-def bitdif(i,j):
+"""def bitdif(i,j):
 	str1 = bin(i)
 	str2 = bin(j)
 	#print str1,str2
 	str1 = str1.replace("0b","")
 	str2 = str2.replace("0b","")
-	str1 = ''.join(['0']*(maxPower-len(str1))) + str1
-	str2 = ''.join(['0']*(maxPower-len(str2))) + str2
+	str1 = ''.join(['0']*(int(maxPower)-len(str1))) + str1
+	str2 = ''.join(['0']*(int(maxPower)-len(str2))) + str2
 	print "Strings are: ",str1,str2
 	xstr = ""
 	#str1 = bin(i)
 	#str2 = bin(j)
 	for x,s in enumerate(difflib.ndiff(str1,str2)):
-		#print "X is: ",x
+		print "X is: ",x
+		if x==len(str1): continue
 		if s[0] == " ":
 			xstr += str1[x]
 		#print str1[i]
-		elif s[0] == "-" :
+		elif(s[0] == "-" or s[0]=="+" ) :
 			xstr += "-"
 		#print i,j,xstr
 	coloumns[xstr] = (i,j)
-	return
+	return"""
 def Xor(n,str1, str2):
 	str1 = str1.replace("0b","")
 	str2 = str2.replace("0b","")
@@ -52,7 +53,7 @@ minterms = map(int , raw_input().split(","))
 #print minterms
 #print max(minterms)
 #print log(max(minterms)+1,2) For testing
-maxPower = int(log(max(minterms)+1,2))+1
+maxPower = ceil(log(max(minterms)+1,2))
 d = defaultdict(list)
 for minterm in minterms:
 	if minterm not in d[bin(minterm).count("1")]:
@@ -70,7 +71,7 @@ if(dontcares != None):
 	for dontcare in dontcares:
 		if dontcare not in d[bin(dontcare).count("1")]:
 			d[bin(dontcare).count("1")].append(dontcare)
-			maxPower = max(maxPower,int(log(max(dontcares)+1,2))+1)
+			maxPower = max(maxPower,ceil(log(max(dontcares)+1,2)))
 print maxPower
 
 print d.items()
@@ -89,12 +90,26 @@ for key in sorted(d):
 		for i in d[key]:
 			for j in d[key+1]:
 				if (bin(i^j).count("1")==1):
+					str1 = bin(i)
+					str2 = bin(j)
+					str1 = str1.replace("0b","")
+					str2 = str2.replace("0b","")
+					str1 = ''.join(['0']*(int(maxPower)-len(str1))) + str1
+					str2 = ''.join(['0']*(int(maxPower)-len(str2))) + str2
+					position = -1;
 					taken.append(i)
 					taken.append(j)
-					#print i , j 
-						#print i, j, "IT IS WORKING :D"
-					#mcol[key].append()
-					bitdif(i,j)
+					strx = bin(i^j).replace("0b","")
+					strx = ''.join(['0']*(int(maxPower)-len(strx))) + strx
+					for m in range (0,len(strx)):
+						if(strx[m]=="1"): position = m;
+					print position
+					xstr = ""
+					for k in range(0,len(str1)):
+						if k!= position : xstr+= str2[k]
+						else : xstr += '-'
+					coloumns[xstr] = (i,j)
+					#bitdif(i,j)
 primeimplicants = [x for x in minterms if x not in taken]
 # for x in enumerate(coloumns.keys()):
 #  	if x[0]+1 > len(coloumns):
@@ -103,6 +118,7 @@ primeimplicants = [x for x in minterms if x not in taken]
 # 	if (key[0]+2) < len(coloumns):
 # 		Xor(maxPower,coloumns[key[1]],coloumns[])
 #print primeimplicants
+
 #print primeimplicants
 print coloumns
 coloumns = {x : coloumns[x] for x in sorted(coloumns.keys(), key = lambda key: key.count('1'))}
