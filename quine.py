@@ -53,7 +53,7 @@ minterms = map(int , raw_input().split(","))
 #print minterms
 #print max(minterms)
 #print log(max(minterms)+1,2) For testing
-maxPower = ceil(log(max(minterms)+1,2))
+maxPower = int(log(max(minterms)+1,2))+1
 d = defaultdict(list)
 for minterm in minterms:
 	if minterm not in d[bin(minterm).count("1")]:
@@ -71,7 +71,7 @@ if(dontcares != None):
 	for dontcare in dontcares:
 		if dontcare not in d[bin(dontcare).count("1")]:
 			d[bin(dontcare).count("1")].append(dontcare)
-			maxPower = max(maxPower,ceil(log(max(dontcares)+1,2)))
+			maxPower = max(maxPower,int(log(max(dontcares)+1,2))+1)
 print maxPower
 
 print d.items()
@@ -120,9 +120,9 @@ primeimplicants = [x for x in minterms if x not in taken]
 #print primeimplicants
 
 #print primeimplicants
-print coloumns
-coloumns = {x : coloumns[x] for x in sorted(coloumns.keys(), key = lambda key: key.count('1'))}
-print coloumns
+# print coloumns
+# coloumns = {x : coloumns[x] for x in sorted(coloumns.keys(), key = lambda key: key.count('1'))}
+# print coloumns
 del taken [:]
 #taken =list(tuple)
 for key in range(0,len(coloumns.keys())-1):
@@ -131,14 +131,16 @@ for key in range(0,len(coloumns.keys())-1):
  		# 	for j in coloumns.keys()[key+1]:
  		# 
  		bitloc = Xor(int(maxPower),coloumns.keys()[key],coloumns.keys()[key+1])
- 		print bitloc , coloumns.items()[key] , coloumns.items()[key+1]
+ 		#print bitloc , coloumns.items()[key] , coloumns.items()[key+1]
  		if bitloc != -2 and  bitloc != -1:
  			tkey = list(coloumns.keys()[key])
  			#print tkey
  			tkey [int(maxPower)-1-bitloc]= "-"
  			#print tkey
  			tkey = ''.join(tkey)
- 			taken.append(coloumns.items()[key])
- 			taken.append(coloumns.items()[key+1])
+ 			taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[key+1]])
  			coloumns[tkey] = coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[key+1]]
-print coloumns
+#print taken
+print coloumns 
+primeimplicants = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
+print primeimplicants
