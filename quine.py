@@ -107,6 +107,19 @@ primeimplicants = [x for x in minterms if x not in taken]
 print coloumns
 coloumns = {x : coloumns[x] for x in sorted(coloumns.keys(), key = lambda key: key.count('1'))}
 print coloumns
-# for key in range(0,len(coloumns.keys())):
-# 	if coloumns.items()[key+1] is not None:
-
+del taken [:]
+#taken =list(tuple)
+for key in range(0,len(coloumns.keys())-1):
+ 	if coloumns.items()[key+1] is not None:
+ 		# for i in coloumns.keys()[key]:
+ 		# 	for j in coloumns.keys()[key+1]:
+ 		# 
+ 		bitloc = Xor(maxPower,coloumns.keys()[key],coloumns.keys()[key+1])
+ 		if bitloc != -2 and bitloc != -1:
+ 			tkey = list(coloumns.key()[key])
+ 			tkey = "-"
+ 			tkey = ''.join(coloumns.keys()[key])
+ 			taken.append(coloumns.items()[key])
+ 			taken.append(coloumns.items()[key+1])
+ 			coloumns[tkey] = coloumns.items()[key] + coloumns.items()[key+1]
+print coloumns
