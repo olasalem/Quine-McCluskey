@@ -155,5 +155,6 @@ while flag == True:
 	print "taken " ,taken
 	print "coloumns " ,coloumns
 	print "templst" , templst
-	# coloumns.clear()
+	print "primeimplicants" , primeimplicants
+	coloumns.clear()
 print "Last Iteration: ", primeimplicants
