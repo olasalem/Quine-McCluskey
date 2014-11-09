@@ -1,41 +1,44 @@
 from collections import defaultdict
 from math import log, ceil
 import difflib
-#n = raw_input()
-"""def Xor(str1, str2):
-	str1.replace("0b","")
-	str2.replace("0b","")
-"""
+from sets import Set
+################################################################################################################
+										"""Some Variables"""
+################################################################################################################
 coloumns = dict()
-"""def bitdif(i,j):
-	str1 = bin(i)
-	str2 = bin(j)
-	#print str1,str2
-	str1 = str1.replace("0b","")
-	str2 = str2.replace("0b","")
-	str1 = ''.join(['0']*(int(maxPower)-len(str1))) + str1
-	str2 = ''.join(['0']*(int(maxPower)-len(str2))) + str2
-	print "Strings are: ",str1,str2
-	xstr = ""
-	#str1 = bin(i)
-	#str2 = bin(j)
-	for x,s in enumerate(difflib.ndiff(str1,str2)):
-		print "X is: ",x
-		if x==len(str1): continue
-		if s[0] == " ":
-			xstr += str1[x]
-		#print str1[i]
-		elif(s[0] == "-" or s[0]=="+" ) :
-			xstr += "-"
-		#print i,j,xstr
-	coloumns[xstr] = (i,j)
-	return"""
+templst = list()
+taken = list()
+flag = True
+d = defaultdict(list)
+maxPower = 0
+################################################################################################################
+										"""Functions"""
+################################################################################################################
+
+def iterations():
+	flag = False
+	for key in range(0,len(coloumns.keys())-1):
+		if d[key] is None:
+			break
+ 		else:
+ 			bitloc = Xor(int(maxPower),coloumns.keys()[key],coloumns.keys()[key+1])
+	 		if bitloc != -2 and  bitloc != -1:
+	 			flag = True
+	 			# print flag
+	 			tkey = list(coloumns.keys()[key])
+	 			tkey [int(maxPower)-1-bitloc]= "-"
+	 			tkey = ''.join(tkey)
+	 			taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[key+1]])
+	 			coloumns[tkey] = coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[key+1]]
+	templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
+	return	(templst, flag)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 def Xor(n,str1, str2):
 	str1 = str1.replace("0b","")
 	str2 = str2.replace("0b","")
 	str1 = ''.join(['0']*(n-len(str1))) + str1
 	str2 = ''.join(['0']*(n-len(str2))) + str2
-	
 	lstXor = list()
 	for i in range (0,len(str1)):
 		if(str1[i] != str2[i]):
@@ -44,20 +47,19 @@ def Xor(n,str1, str2):
 	elif(len(lstXor)==1): return lstXor[0]
 	else: return -1
 
-# input = raw_input().split(' ')
-# str1 = bin(int(input[0]))
-# str2 = bin(int(input[1]))
-# print Xor(8,str1,str2)
+####################################################################################################################
+												"""Main"""
+####################################################################################################################
 print "Minterms:"
-minterms = map(int , raw_input().split(","))
-#print minterms
-#print max(minterms)
-#print log(max(minterms)+1,2) For testing
-maxPower = ceil(log(max(minterms)+1,2))
-d = defaultdict(list)
-for minterm in minterms:
-	if minterm not in d[bin(minterm).count("1")]:
-		d[bin(minterm).count("1")].append(minterm)
+try:
+	minterms = map(int , raw_input().split(","))
+except ValueError:
+	minterms = None
+if minterms is not None:	
+	maxPower = ceil(log(max(minterms)+1,2))
+	for minterm in minterms:
+		if minterm not in d[bin(minterm).count("1")]:
+			d[bin(minterm).count("1")].append(minterm)
 print "Don't Cares:"
 try:
 	dontcares = map(int , raw_input().split(","))
@@ -66,27 +68,16 @@ except ValueError:
 if(dontcares != None):
 	print dontcares
 	print max(dontcares)
-	#print log(max(dontcares),2)
-	print ceil(log(max(dontcares)+1,2))
+	print int(log(max(dontcares)+1,2))+1
 	for dontcare in dontcares:
 		if dontcare not in d[bin(dontcare).count("1")]:
 			d[bin(dontcare).count("1")].append(dontcare)
 			maxPower = max(maxPower,ceil(log(max(dontcares)+1,2)))
-print maxPower
-
-print d.items()
-#if  d[0]:
-#	print d[0] #Testing
-primeimplicants = list()
-taken = list()
+primeimplicants = list(list())
 for key in sorted(d):
-	#iterate over each list and thenext list
 	if d[key+1] is not None:
-	#	continue
-	#else:
 		print d[key]
 		print d[key+1]
-		#mcol = defaultdict(list)
 		for i in d[key]:
 			for j in d[key+1]:
 				if (bin(i^j).count("1")==1):
@@ -148,3 +139,17 @@ for key in range(0,len(coloumns.keys())-1):
  			coloumns[tkey] = coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[key+1]]
 print coloumns
 
+if minterms is not None:
+	primeimplicants = [[x for x in minterms if x not in taken]]
+count = 0
+while flag == True:
+	flag = False
+	count += 1
+	print "iteration number", count
+	templst,flag = iterations()
+	primeimplicants.append(templst)
+	print "taken " ,taken
+	print "coloumns " ,coloumns
+	print "templst" , templst
+	coloumns.clear()
+print "Last Iteration: ", primeimplicants
