@@ -34,8 +34,38 @@ def iterations(count):
 				 			tkey = list(coloumns.keys()[key])
 				 			tkey [int(maxPower)-1-bitloc]= "-"
 				 			tkey = ''.join(tkey)
-				 			taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			coloumns[tkey] = coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[nkey]]
+				 			# print "1st item tuple ", coloumns[coloumns.keys()[key]]
+				 			# print "2nd item tuple ",coloumns[coloumns.keys()[nkey]]
+				 			# print "The tuple is ", (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
+				 			# tflag = False
+				 			# if len(coloumns[coloumns.keys()[key]]) < len(coloumns[coloumns.keys()[nkey]]):
+				 			# 	for item in coloumns[coloumns.keys()[key]]:
+				 			# 		if item in  coloumns[coloumns.keys()[nkey]]:
+				 			# 			tflag = True
+				 			# 	if tflag == False:
+				 			# 		# print "The tuple is ", (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
+				 			# 		# taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
+				 			# 		# coloumns[tkey] = (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
+				 			# 	else:
+				 			# 		# print  "The tuple is ", coloumns[coloumns.keys()[nkey]]
+				 			# 		# taken.append(coloumns[coloumns.keys()[nkey]])
+				 			# 		# coloumns[tkey] = (coloumns[coloumns.keys()[nkey]])
+				 			# 	tflag = False
+				 			# else:
+				 			# 	for item in coloumns[coloumns.keys()[nkey]]:
+				 			# 		if item in  coloumns[coloumns.keys()[key]]:
+				 			# 			tflag = True
+				 			# 	if tflag == False:
+				 			# 		# print "The tuple is ", (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
+				 			# 		# taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
+				 			# 		# coloumns[tkey] = (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
+				 			# 	else:
+				 			# 		# print  "The tuple is ", coloumns[coloumns.keys()[key]]
+				 			# 		# taken.append(coloumns[coloumns.keys()[key]])
+				 			# 		# coloumns[tkey] = coloumns[coloumns.keys()[key]]
+				 			# 	tflag = False
+				 			taken.append(tuple(set(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])))
+				 			coloumns[tkey] = tuple(set((coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[nkey]])))
 	templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
 	# print "Iteration # ", count ,"templst",templst
 	return	(templst, flag)
@@ -73,9 +103,9 @@ try:
 except ValueError:
 	dontcares = None
 if(dontcares != None):
-	print dontcares
-	print max(dontcares)
-	print int(log(max(dontcares)+1,2))+1
+	# print dontcares
+	# print max(dontcares)
+	# print int(log(max(dontcares)+1,2))+1
 	for dontcare in dontcares:
 		if dontcare not in d[bin(dontcare).count("1")]:
 			d[bin(dontcare).count("1")].append(dontcare)
@@ -83,8 +113,8 @@ if(dontcares != None):
 primeimplicants = list(list())
 for key in sorted(d):
 	if d[key+1] is not None:
-		print d[key]
-		print d[key+1]
+		# print d[key]
+		# print d[key+1]
 		for i in d[key]:
 			for j in d[key+1]:
 				if (bin(i^j).count("1")==1):
@@ -101,7 +131,7 @@ for key in sorted(d):
 					strx = ''.join(['0']*(int(maxPower)-len(strx))) + strx
 					for m in range (0,len(strx)):
 						if(strx[m]=="1"): position = m;
-					print position
+					# print position
 					xstr = ""
 					for k in range(0,len(str1)):
 						if k!= position : xstr+= str2[k]
@@ -110,14 +140,18 @@ for key in sorted(d):
 if minterms is not None:
 	primeimplicants = [[x for x in minterms if x not in taken]]
 count = 0
+epi = list()
 while flag == True:
 	flag = False
 	count += 1
 	templst,flag = iterations(count)
-	primeimplicants.append(templst)
-	print "iteration number", count
-	print "taken " ,taken
-	print "coloumns " ,coloumns
-	print "templst" , templst
-	print "primeimplicants",primeimplicants
-print "Last Iteration: ", primeimplicants
+	epi.append(templst)
+	# print "iteration number", count
+	# print "taken " ,taken
+	# print "coloumns " ,coloumns
+	# print "templst" , templst
+	primeimplicants.append(taken)
+	# print "primeimplicants",primeimplicants
+# print "Last Iteration: ", primeimplicants
+print coloumns
+print primeimplicants
