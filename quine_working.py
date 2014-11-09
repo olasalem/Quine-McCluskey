@@ -104,45 +104,6 @@ for key in sorted(d):
 						if k!= position : xstr+= str2[k]
 						else : xstr += '-'
 					coloumns[xstr] = (i,j)
-					#bitdif(i,j)
-primeimplicants = [x for x in minterms if x not in taken]
-# for x in enumerate(coloumns.keys()):
-#  	if x[0]+1 > len(coloumns):
-#  		print x[0]+1
-# for key in enumerate(coloumns.keys()):
-# 	if (key[0]+2) < len(coloumns):
-# 		Xor(maxPower,coloumns[key[1]],coloumns[])
-#print primeimplicants
-
-#print primeimplicants
-print coloumns
-coloumn = [x for x in sorted(coloumns.keys(), key = lambda key: key.count('1')) ]
-print coloumn
-for key in coloumn:
-	print coloumns[key]
-print primeimplicants
-# for key in range(0,len(coloumns.keys())):
-# 	if coloumns.items()[key+1] is not None:
-del taken [:]
-#taken =list(tuple)
-for key in range(0,len(coloumns.keys())-1):
- 	if coloumns.items()[key+1] is not None:
- 		# for i in coloumns.keys()[key]:
- 		# 	for j in coloumns.keys()[key+1]:
- 		# 
- 		bitloc = Xor(int(maxPower),coloumns.keys()[key],coloumns.keys()[key+1])
- 		print bitloc , coloumns.items()[key] , coloumns.items()[key+1]
- 		if bitloc != -2 and  bitloc != -1:
- 			tkey = list(coloumns.keys()[key])
- 			print tkey
- 			tkey [int(maxPower)-1-bitloc]= "-"
- 			#print tkey
- 			tkey = ''.join(tkey)
- 			taken.append(coloumns.items()[key])
- 			taken.append(coloumns.items()[key+1])
- 			coloumns[tkey] = coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[key+1]]
-print coloumns
-
 if minterms is not None:
 	primeimplicants = [[x for x in minterms if x not in taken]]
 count = 0
