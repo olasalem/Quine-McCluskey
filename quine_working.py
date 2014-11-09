@@ -24,17 +24,20 @@ def iterations(count):
 		if d[key] is None:
 			break
  		else:
- 			if coloumns.keys()[key].count("-") == count: 
-	 			bitloc = Xor(int(maxPower),coloumns.keys()[key],coloumns.keys()[key+1])
-		 		if bitloc != -2 and  bitloc != -1:
-		 			flag = True
-		 			# print flag
-		 			tkey = list(coloumns.keys()[key])
-		 			tkey [int(maxPower)-1-bitloc]= "-"
-		 			tkey = ''.join(tkey)
-		 			taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[key+1]])
-		 			coloumns[tkey] = coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[key+1]]
+ 			if coloumns.keys()[key].count("-") == count:
+ 				for nkey in range(0,len(coloumns.keys())-1):
+ 					if nkey is not key:
+	 					bitloc = Xor(int(maxPower),coloumns.keys()[key],coloumns.keys()[nkey])
+				 		if bitloc != -2 and  bitloc != -1:
+				 			flag = True
+				 			# print flag
+				 			tkey = list(coloumns.keys()[key])
+				 			tkey [int(maxPower)-1-bitloc]= "-"
+				 			tkey = ''.join(tkey)
+				 			taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
+				 			coloumns[tkey] = coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[nkey]]
 	templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
+	# print "Iteration # ", count ,"templst",templst
 	return	(templst, flag)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -110,11 +113,11 @@ count = 0
 while flag == True:
 	flag = False
 	count += 1
-	print "iteration number", count
 	templst,flag = iterations(count)
 	primeimplicants.append(templst)
+	print "iteration number", count
 	print "taken " ,taken
 	print "coloumns " ,coloumns
 	print "templst" , templst
-	# coloumns.clear()
+	print "primeimplicants",primeimplicants
 print "Last Iteration: ", primeimplicants
