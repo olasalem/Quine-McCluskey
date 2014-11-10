@@ -17,6 +17,8 @@ maxPower = 0
 countDict = defaultdict(list)
 minterms = []
 EPI = set() 
+Variables = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"]
+
 ################################################################################################################
 #										"""Functions"""
 ################################################################################################################
@@ -167,6 +169,23 @@ def DCR():
 
 	return flag
 ####################################################################################################################
+def output(str1):
+	strx = ""
+	for i in range (0,len(str1)):
+		c = str1[len(str1)-i-1]
+		if c is "1":
+			strx += Variables[i]
+		elif c is "0":
+			strx = strx+ Variables[i]+"`"
+		elif c is "-": continue
+	if strx is "":
+		strx = "1"
+	return strx
+
+
+
+
+####################################################################################################################
 #											"""Main"""
 ####################################################################################################################
 print "Minterms:"
@@ -266,5 +285,24 @@ print "PI after DRC",primeImplicants
 print "Eseesntials", EPI
 function = []
 function [:] = [key for i in EPI for key,value in coloumns.items() if value is i ]
-print function
+print coloumns
+v  = list()
+v = Variables[0:int(maxPower)]
+finalOutput = list()
+finalOutput [:] = [output(i) for i in function]
+print "function ", str(v).replace(']',')').replace('[','(') , "=",
 
+if "1" in finalOutput:print "1"
+else:
+	for i in range (0,len(finalOutput)):
+		print i,
+		if i is not len(finalOutput)-1:
+			print "+",
+	print " "
+
+
+"""for i in range (0,len(function)):
+ 	print output(function[i]),
+ 	if i is not len(function)-1:
+ 		print "+", 
+ print """" "
