@@ -74,21 +74,6 @@ def iterations(count):
 	templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
 	# print "Iteration # ", count ,"templst",templst
 	return	(templst, flag)
-				 			#dummyList.append(coloumns[nkey])
-				 			#dummyDict[tkey] = tuple(set((coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[nkey]])))
-				 			#dummyList.append(key)
-				 			#dummyList.append(nkey)
-				 			#print "keys" ,key,  nkey
-				 			#print "dummy",coloumns[coloumns.keys()[key]] , coloumns[coloumns.keys()[nkey]]
-	"""print "dlist", dummyList
-	print "ddict", dummyDict
-	print "1",coloumns
-	for i in dummyList:
-		if i in coloumns:del coloumns[i]
-	print "2",coloumns
-	for k,v in dummyDict.items():
-		coloumns[k] = v
-	print "3", coloumns"""
 
 	
 	#templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
@@ -109,13 +94,10 @@ def Xor(n,str1, str2):
 	elif(len(lstXor)==1): return lstXor[0]
 	else: return -1
 ####################################################################################################################
-def DCR():
+def Ess():
 	flag = False
 	deleted = list()
-	Dominatedrows = list()
 	temp = list()
-	#print "DCR PI",primeImplicants
-	#print "DCR MINTERMS", minterms
 	try:
 		for minterm in minterms:
 			for v in primeImplicants:
@@ -125,7 +107,6 @@ def DCR():
 			if len(countDict[minterm]) is 1 : 
 				flag = True
 				EPI.add(countDict[minterm][0])
-	
 		primeImplicants[:] = [item for item in primeImplicants if item not in EPI]
 		
 		for item in EPI:
@@ -135,12 +116,15 @@ def DCR():
 		minterms[:] = [j for j in minterms if j not in deleted]
 		temp [:] = [ item for item in primeImplicants for i in item for j in deleted if i is j]
 		primeImplicants [:] = [item for item in primeImplicants if item  not in temp]
-
 	except TypeError:
 		None
+	return flag
+####################################################################################################3
+def DC():
 	deleted = set()
 	temp = set()
 	xx = False
+	DominatedCols = list()
 	try:
 		for key1 in minterms:
 			for key2 in minterms:
@@ -155,19 +139,46 @@ def DCR():
 					else:
 						xx = True
 						deleted.add(key1)
-						Dominatedrows.append(key2)
-		#print "Dominatedrows",Dominatedrows
-		minterms[:] = [j for j in minterms if j not in Dominatedrows]
+						DominatedCols.append(key2)
+		#print "DominatedCols",DominatedCols
+		minterms[:] = [j for j in minterms if j not in DominatedCols]
 		for item in deleted:
 			for v in primeImplicants:
 				for i in v:
 					if item is i: temp.add(v)
 		primeImplicants [:] = [item for item in primeImplicants if item not in temp]
+
 	except TypeError:
 		None
-	#print minterms
+		#print minterms
 
+	return xx
+
+#####################################################################################################3
+def DR():
+	flag = False
+	print "minterms",minterms
+	set1 = set()
+	set2 = set()
+	temp = set()
+	temp1 = set()
+	for item1 in  primeImplicants:
+		for item2 in primeImplicants:
+			if item1 is item2 or len(item1) > len(item2): continue
+			else:
+				set1 = set([i for i in item1])
+				set2 = set ([i for i in item2])
+				if set1.issubset(set2):
+					flag = True
+					temp.add(item1)
+					temp1.add(item2)
+	primeImplicants [:] = [item for item in primeImplicants if item not in temp]
+	print "rows",temp
+		#primeImplicants [:] = [item for item in primeImplicants if item not in temp]
 	return flag
+
+
+	
 ####################################################################################################################
 def output(str1):
 	strx = ""
@@ -211,7 +222,7 @@ if(dontcares != None):
 		if dontcare not in d[bin(dontcare).count("1")]:
 			d[bin(dontcare).count("1")].append(dontcare)
 			maxPower = max(maxPower,ceil(log(max(dontcares)+1,2)))
-primeimplicants = list(list())
+#primeimplicants = list(list())
 for key in sorted(d):
 	if d[key+1] is not None:
 		# print d[key]
@@ -238,12 +249,12 @@ for key in sorted(d):
 						if k!= position : xstr+= str2[k]
 						else : xstr += '-'
 					coloumns[xstr] = (i,j)
-if minterms is not None:
-	primeimplicants = [[x for x in minterms if x not in taken]]
+#if minterms is not None:
+#	primeimplicants = [[x for x in minterms if x not in taken]]
 count = 0
 epi = list()
 while flag == True:
-	flag = False
+	# flag = False
 	count += 1
 	templst,flag = iterations(count)
 	epi.append(templst)
@@ -251,7 +262,8 @@ while flag == True:
 	# print "taken " ,taken
 	# print "coloumns " ,coloumns
 	# print "templst" , templst
-	primeimplicants.append(taken)
+	#primeimplicants.append(taken)
+
 	# print "primeimplicants",primeimplicants
 # print "Last Iteration: ", primeimplicants
 #print "cols",coloumns
@@ -259,9 +271,7 @@ while flag == True:
 primeImplicants = []
 primeImplicants [:]= [v for k,v in coloumns.items()]
 print"primeimplicants table:"
-for i in primeImplicants:
-	print i
-set1 = set()
+"""set1 = set()
 set2 = set()
 duplicates = set()
 for v in primeImplicants:
@@ -272,13 +282,14 @@ for v in primeImplicants:
 			set2 = set([j for j in u])
 			if set1.issubset(set2): 
 				duplicates.add(v)
-primeImplicants [:] = [v for v in primeImplicants if v not in duplicates]
+primeImplicants [:] = [v for v in primeImplicants if v not in duplicates]"""
 print "final PI:"
 for i in primeImplicants:
 	print i
-while (True):
-	if minterms is not None:
-		flag = DCR()
+while minterms is not None:
+	flag = Ess()	
+	flag1 = DC()
+	flag2 = DR()
 	if flag is False: break
 print "Done"
 print "PI after DRC",primeImplicants
@@ -286,16 +297,33 @@ print "Eseesntials", EPI
 function = []
 function [:] = [key for i in EPI for key,value in coloumns.items() if value is i ]
 print coloumns
+print "minterm remaining", minterms
+print "primeimplicants", primeImplicants
+setX1 = set()
+"""setX2 = set()
+minTaken = set()
+for i in range(len(minterms)-1,0,-1):
+	setX1 = set(m for m in minterms[0:i] if m not in minTaken)
+	for item in primeImplicants:
+		setX2 = set([c for c in item])
+		if setX1.issubset(setX2): 
+			minTaken += list(setX1)"""
+
+
+
+
+
+
 v  = list()
 v = Variables[0:int(maxPower)]
 finalOutput = list()
 finalOutput [:] = [output(i) for i in function]
-print "function ", str(v).replace(']',')').replace('[','(') , "=",
+print "function ", str(v).replace(']',')').replace('[','(').replace("'",""), "=",
 
 if "1" in finalOutput:print "1"
 else:
 	for i in range (0,len(finalOutput)):
-		print i,
+		print finalOutput[i],
 		if i is not len(finalOutput)-1:
 			print "+",
 	print " "
