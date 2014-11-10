@@ -35,52 +35,13 @@ def iterations(count):
 	 					bitloc = Xor(int(maxPower),coloumns.keys()[key],coloumns.keys()[nkey])
 				 		if bitloc != -2 and  bitloc != -1:
 				 			flag = True
-				 			# print flag
 				 			tkey = list(coloumns.keys()[key])
 				 			tkey [int(maxPower)-1-bitloc]= "-"
 				 			tkey = ''.join(tkey)
-				 			# print "1st item tuple ", coloumns[coloumns.keys()[key]]
-				 			# print "2nd item tuple ",coloumns[coloumns.keys()[nkey]]
-				 			# print "The tuple is ", (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# tflag = False
-				 			# if len(coloumns[coloumns.keys()[key]]) < len(coloumns[coloumns.keys()[nkey]]):
-				 			# 	for item in coloumns[coloumns.keys()[key]]:
-				 			# 		if item in  coloumns[coloumns.keys()[nkey]]:
-				 			# 			tflag = True
-				 			# 	if tflag == False:
-				 			# 		# print "The tuple is ", (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 		# taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 		# coloumns[tkey] = (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 	else:
-				 			# 		# print  "The tuple is ", coloumns[coloumns.keys()[nkey]]
-				 			# 		# taken.append(coloumns[coloumns.keys()[nkey]])
-				 			# 		# coloumns[tkey] = (coloumns[coloumns.keys()[nkey]])
-				 			# 	tflag = False
-				 			# else:
-				 			# 	for item in coloumns[coloumns.keys()[nkey]]:
-				 			# 		if item in  coloumns[coloumns.keys()[key]]:
-				 			# 			tflag = True
-				 			# 	if tflag == False:
-				 			# 		# print "The tuple is ", (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 		# taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 		# coloumns[tkey] = (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 	else:
-				 			# 		# print  "The tuple is ", coloumns[coloumns.keys()[key]]
-				 			# 		# taken.append(coloumns[coloumns.keys()[key]])
-				 			# 		# coloumns[tkey] = coloumns[coloumns.keys()[key]]
-				 			# 	tflag = False
 				 			taken.append(tuple(set(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])))
 				 			coloumns[tkey] = tuple(set((coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[nkey]])))
-	templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
-	# print "Iteration # ", count ,"templst",templst
-	return	(templst, flag)
-
-	
-	#templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
-	#print "Iteration # ", count ,"templst",templst
-	#return	(templst, flag)
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+	return	(flag)
+######################################################################################################################
 def Xor(n,str1, str2):
 	str1 = str1.replace("0b","")
 	str2 = str2.replace("0b","")
@@ -140,7 +101,6 @@ def DC():
 						xx = True
 						deleted.add(key1)
 						DominatedCols.append(key2)
-		#print "DominatedCols",DominatedCols
 		minterms[:] = [j for j in minterms if j not in DominatedCols]
 		for item in deleted:
 			for v in primeImplicants:
@@ -150,8 +110,6 @@ def DC():
 
 	except TypeError:
 		None
-		#print minterms
-
 	return xx
 
 #####################################################################################################3
@@ -174,7 +132,6 @@ def DR():
 					temp1.add(item2)
 	primeImplicants [:] = [item for item in primeImplicants if item not in temp]
 	print "rows",temp
-		#primeImplicants [:] = [item for item in primeImplicants if item not in temp]
 	return flag
 
 
@@ -192,16 +149,15 @@ def output(str1):
 	if strx is "":
 		strx = "1"
 	return strx
-
-
-
-
 ####################################################################################################################
 #											"""Main"""
 ####################################################################################################################
 print "Minterms:"
+mintermsSet = set()
+PICopy = []
 try:
 	minterms = map(int , raw_input().split(","))
+	mintermsSet = set(minterms)
 except ValueError:
 	minterms = None
 if minterms is not None:	
@@ -215,18 +171,12 @@ try:
 except ValueError:
 	dontcares = None
 if(dontcares != None):
-	# print dontcares
-	# print max(dontcares)
-	# print int(log(max(dontcares)+1,2))+1
 	for dontcare in dontcares:
 		if dontcare not in d[bin(dontcare).count("1")]:
 			d[bin(dontcare).count("1")].append(dontcare)
 			maxPower = max(maxPower,ceil(log(max(dontcares)+1,2)))
-#primeimplicants = list(list())
 for key in sorted(d):
 	if d[key+1] is not None:
-		# print d[key]
-		# print d[key+1]
 		for i in d[key]:
 			for j in d[key+1]:
 				if (bin(i^j).count("1")==1):
@@ -243,35 +193,21 @@ for key in sorted(d):
 					strx = ''.join(['0']*(int(maxPower)-len(strx))) + strx
 					for m in range (0,len(strx)):
 						if(strx[m]=="1"): position = m;
-					# print position
 					xstr = ""
 					for k in range(0,len(str1)):
 						if k!= position : xstr+= str2[k]
 						else : xstr += '-'
 					coloumns[xstr] = (i,j)
-#if minterms is not None:
-#	primeimplicants = [[x for x in minterms if x not in taken]]
 count = 0
-epi = list()
 while flag == True:
-	# flag = False
 	count += 1
-	templst,flag = iterations(count)
-	epi.append(templst)
-	# print "iteration number", count
-	# print "taken " ,taken
-	# print "coloumns " ,coloumns
-	# print "templst" , templst
-	#primeimplicants.append(taken)
-
-	# print "primeimplicants",primeimplicants
-# print "Last Iteration: ", primeimplicants
-#print "cols",coloumns
-#print "pi",primeimplicants
+	flag = iterations(count)
 primeImplicants = []
 primeImplicants [:]= [v for k,v in coloumns.items()]
-print"primeimplicants table:"
-"""set1 = set()
+"""print"primeimplicants table:"
+for i in primeImplicants:
+	print i"""
+set1 = set()
 set2 = set()
 duplicates = set()
 for v in primeImplicants:
@@ -282,8 +218,9 @@ for v in primeImplicants:
 			set2 = set([j for j in u])
 			if set1.issubset(set2): 
 				duplicates.add(v)
-primeImplicants [:] = [v for v in primeImplicants if v not in duplicates]"""
+primeImplicants [:] = [v for v in primeImplicants if v not in duplicates]
 print "final PI:"
+PICopy = list(primeImplicants)
 for i in primeImplicants:
 	print i
 while minterms is not None:
@@ -299,18 +236,34 @@ function [:] = [key for i in EPI for key,value in coloumns.items() if value is i
 print coloumns
 print "minterm remaining", minterms
 print "primeimplicants", primeImplicants
-setX1 = set()
-"""setX2 = set()
-minTaken = set()
-for i in range(len(minterms)-1,0,-1):
-	setX1 = set(m for m in minterms[0:i] if m not in minTaken)
-	for item in primeImplicants:
-		setX2 = set([c for c in item])
-		if setX1.issubset(setX2): 
-			minTaken += list(setX1)"""
-
-
-
+covered = set()
+essentials = []
+uncoveredPI = set(PICopy)
+print "cc"
+print mintermsSet
+for m in mintermsSet:
+	if m not in covered:
+		count = 0
+		tempEssent = tuple()
+		for t in PICopy:
+			if m in t:
+				count += 1
+				if count is 1:
+					tempEssent = t
+		if count is 1:
+			essentials.append(tempEssent)
+			uncoveredPI.remove(tempEssent)
+			for x in tempEssent:
+				if x in mintermsSet:
+					covered.add(x)
+print "Essential Prime Implicants:"
+print essentials
+#remaining
+uncovered = mintermsSet - covered
+covered.clear()
+#for m in uncovered:
+	#for t in uncoveredPI:
+		#if m in t:
 
 
 
@@ -327,10 +280,3 @@ else:
 		if i is not len(finalOutput)-1:
 			print "+",
 	print " "
-
-
-"""for i in range (0,len(function)):
- 	print output(function[i]),
- 	if i is not len(function)-1:
- 		print "+", 
- print """" "
