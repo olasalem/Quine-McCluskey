@@ -111,6 +111,7 @@ def DCR():
 	flag = False
 	deleted = list()
 	Dominatedrows = list()
+	temp = list()
 	#print "DCR PI",primeImplicants
 	#print "DCR MINTERMS", minterms
 	try:
@@ -130,6 +131,9 @@ def DCR():
 				if j in minterms:
 					deleted.append(j)
 		minterms[:] = [j for j in minterms if j not in deleted]
+		temp [:] = [ item for item in primeImplicants for i in item for j in deleted if i is j]
+		primeImplicants [:] = [item for item in primeImplicants if item  not in temp]
+
 	except TypeError:
 		None
 	deleted = set()
@@ -260,4 +264,7 @@ while (True):
 print "Done"
 print "PI after DRC",primeImplicants
 print "Eseesntials", EPI
+function = []
+function [:] = [key for i in EPI for key,value in coloumns.items() if value is i ]
+print function
 
