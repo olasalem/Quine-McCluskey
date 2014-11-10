@@ -5,6 +5,8 @@ from collections import defaultdict
 from math import log, ceil
 import difflib
 from sets import Set
+Variables = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"]
+
 ################################################################################################################
 #										"""Some Variables"""
 ################################################################################################################
@@ -17,9 +19,6 @@ maxPower = 0
 countDict = defaultdict(list)
 minterms = []
 EPI = set() 
-uncovered =set()
-Variables = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"]
-
 ################################################################################################################
 #										"""Functions"""
 ################################################################################################################
@@ -36,13 +35,17 @@ def iterations(count):
 	 					bitloc = Xor(int(maxPower),coloumns.keys()[key],coloumns.keys()[nkey])
 				 		if bitloc != -2 and  bitloc != -1:
 				 			flag = True
+				 			# print flag
 				 			tkey = list(coloumns.keys()[key])
 				 			tkey [int(maxPower)-1-bitloc]= "-"
 				 			tkey = ''.join(tkey)
 				 			taken.append(tuple(set(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])))
 				 			coloumns[tkey] = tuple(set((coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[nkey]])))
-	return	(flag)
-######################################################################################################################
+	templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
+	# print "Iteration # ", count ,"templst",templst
+	return	(templst, flag)
+				 			
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 def Xor(n,str1, str2):
 	str1 = str1.replace("0b","")
 	str2 = str2.replace("0b","")
@@ -56,7 +59,21 @@ def Xor(n,str1, str2):
 	elif(len(lstXor)==1): return lstXor[0]
 	else: return -1
 ####################################################################################################################
-def Ess():
+def DCR():
+	DominatedCols = list()
+	set1 = set()
+	set2 = set()
+	duplicates = set()
+	for v in primeImplicants:
+		for u in primeImplicants:
+			if v is u or len(v) > len (u) : continue
+			else:
+				set1 = set([i for i in v])
+				set2 = set([j for j in u])
+				if set1.issubset(set2): 
+					duplicates.add(v)
+	primeImplicants [:] = [v for v in primeImplicants if v not in duplicates]
+	print "b3d zft duplicate",primeImplicants
 	flag = False
 	deleted = list()
 	temp = list()
@@ -80,16 +97,12 @@ def Ess():
 		primeImplicants [:] = [item for item in primeImplicants if item  not in temp]
 	except TypeError:
 		None
-	return flag
-####################################################################################################3
-def DC():
 	deleted = set()
 	temp = set()
 	xx = False
-	DominatedCols = list()
 	try:
-		for key1 in uncovered:
-			for key2 in uncovered:
+		for key1 in minterms:
+			for key2 in minterms:
 				if key1 is key2 or  len(countDict[key1])> len(countDict[key2]) : continue
 				else :
 					xx = True
@@ -102,45 +115,23 @@ def DC():
 						xx = True
 						deleted.add(key1)
 						DominatedCols.append(key2)
-		uncovered= uncovered - deleted #=[:] = [j for j in minterms if j not in DominatedCols]
-		temp = set([v for item in deleted for v in PICopy if item in v])
-		#primeImplicants [:] = [item for item in primeImplicants if item not in temp]
-		PICopy [:] = [item for item in PICopy if item not in temp]
-
+		#print "DominatedCols",DominatedCols
+		minterms[:] = [j for j in minterms if j not in DominatedCols]
+		for item in deleted:
+			for v in primeImplicants:
+				for i in v:
+					if item is i: temp.add(v)
+		primeImplicants [:] = [item for item in primeImplicants if item not in temp]
 	except TypeError:
 		None
-	return xx
-
-#####################################################################################################3
-def DR():
-	flag = False
-	print "minterms",minterms
-	set1 = set()
-	set2 = set()
-	temp = set()
-	#for item1 in  primeImplicants:
-		#for item2 in primeImplicants:
-	for item1 in  PICopy:
-		for item2 in PICopy:
-			if item1 is item2 or len(item1) > len(item2): continue
-			else:
-				set1 = set([i for i in item1])
-				set2 = set ([i for i in item2])
-				if set1.issubset(set2):
-					flag = True
-					temp.add(item1)
-	#primeImplicants [:] = [item for item in primeImplicants if item not in temp]
-	PICopy [:] = [item for item in PICopy if item not in temp]
-	print "rows dominated",temp
+	#print minterms
+	print "b3d zft cols",primeImplicants
 	return flag
-
-
-	
 ####################################################################################################################
 def output(str1):
 	strx = ""
 	for i in range (0,len(str1)):
-		c = str1[i]
+		c = str1[len(str1)-i-1]
 		if c is "1":
 			strx += Variables[i]
 		elif c is "0":
@@ -153,11 +144,8 @@ def output(str1):
 #											"""Main"""
 ####################################################################################################################
 print "Minterms:"
-mintermsSet = set()
-PICopy = []
 try:
 	minterms = map(int , raw_input().split(","))
-	mintermsSet = set(minterms)
 except ValueError:
 	minterms = None
 if minterms is not None:	
@@ -171,12 +159,18 @@ try:
 except ValueError:
 	dontcares = None
 if(dontcares != None):
+	# print dontcares
+	# print max(dontcares)
+	# print int(log(max(dontcares)+1,2))+1
 	for dontcare in dontcares:
 		if dontcare not in d[bin(dontcare).count("1")]:
 			d[bin(dontcare).count("1")].append(dontcare)
 			maxPower = max(maxPower,ceil(log(max(dontcares)+1,2)))
+primeimplicants = list(list())
 for key in sorted(d):
 	if d[key+1] is not None:
+		# print d[key]
+		# print d[key+1]
 		for i in d[key]:
 			for j in d[key+1]:
 				if (bin(i^j).count("1")==1):
@@ -193,110 +187,42 @@ for key in sorted(d):
 					strx = ''.join(['0']*(int(maxPower)-len(strx))) + strx
 					for m in range (0,len(strx)):
 						if(strx[m]=="1"): position = m;
+					# print position
 					xstr = ""
 					for k in range(0,len(str1)):
 						if k!= position : xstr+= str2[k]
 						else : xstr += '-'
 					coloumns[xstr] = (i,j)
+if minterms is not None:
+	primeimplicants = [[x for x in minterms if x not in taken]]
 count = 0
+epi = list()
 while flag == True:
+	flag = False
 	count += 1
-	flag = iterations(count)
+	templst,flag = iterations(count)
+	epi.append(templst)
+
+	primeimplicants.append(taken)
+
 primeImplicants = []
 primeImplicants [:]= [v for k,v in coloumns.items()]
-"""print"primeimplicants table:"
-for i in primeImplicants:
-	print i"""
-set1 = set()
-set2 = set()
-duplicates = set()
-for v in primeImplicants:
-	for u in primeImplicants:
-		if v is u or len(v) > len (u) : continue
-		else:
-			set1 = set([i for i in v])
-			set2 = set([j for j in u])
-			if set1.issubset(set2): 
-				duplicates.add(v)
-primeImplicants [:] = [v for v in primeImplicants if v not in duplicates]
+print"primeimplicants table:"
+
 print "final PI:"
-PICopy = list(primeImplicants)
 for i in primeImplicants:
 	print i
-<<<<<<< HEAD
-#while minterms is not None:
-	#flag = Ess()	
-	#flag1 = DC()
-	#flag2 = DR()
-	#if flag is False: break
-=======
-while minterms is not None:
-	flag = Ess()	
-	flag1 = DC()
-	flag2 = DR()
+while (True):
+	if minterms is not None:
 
->>>>>>> 5965d27f9e118e12548d103443aaa72cd7ce7248
-print "Done"
-print "PI after DRC",primeImplicants
-print "Eseesntials", EPI
+		flag = DCR()
+		print "mintermssssss",minterms
+		print "prrrrrr",primeImplicants
+	if flag is False: break
+EPI.update(set(primeImplicants))
+
 function = []
 function [:] = [key for i in EPI for key,value in coloumns.items() if value is i ]
-print coloumns
-print "minterm remaining", minterms
-print "primeimplicants", primeImplicants
-covered = set()
-essentials = set()
-uncoveredPI = set(PICopy)
-print "Minterms copy:"
-print mintermsSet
-for m in mintermsSet:
-	if m not in covered:
-		count = 0
-		tempEssent = tuple()
-		for t in PICopy:
-			if m in t:
-				count += 1
-				if count is 1:
-					tempEssent = t
-		if count is 1:
-			essentials.add(tempEssent)
-			uncoveredPI.remove(tempEssent)
-			for x in tempEssent:
-				if x in mintermsSet:
-					covered.add(x)
-print "Essential Prime Implicants:"
-print essentials
-print minterms
-#while minterms is not None:
-	#flag = Ess()	
-	#flag1 = DC()
-	#flag2 = DR()
-	#if flag1 is False: break
-#print "Done"
-#print "PI after DRC",PICopy
-#print "Eseesntials", EPI
-remaining = set()
-uncovered = mintermsSet - covered
-covered.clear()
-for m in uncovered:
-	if m not in covered:
-		for t in uncoveredPI:
-			if m in t:
-				remaining.add(t)
-				for x in t:
-					covered.add(x)
-				break
-#print function
-#print EPI
-if minterms is not None:
-	cover = list(essentials) + list(remaining)
-else:
-	cover = primeImplicants
-print "Cover:"
-
-function [:] = [key for i in cover for key,value in coloumns.items() if value is i ]
-for i in function:
-	print output(i)
 v  = list()
 v = Variables[0:int(maxPower)]
 finalOutput = list()
@@ -310,3 +236,5 @@ else:
 		if i is not len(finalOutput)-1:
 			print "+",
 	print " "
+
+
