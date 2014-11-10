@@ -72,7 +72,21 @@ def iterations(count):
 	templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
 	# print "Iteration # ", count ,"templst",templst
 	return	(templst, flag)
-
+				 			#dummyList.append(coloumns[nkey])
+				 			#dummyDict[tkey] = tuple(set((coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[nkey]])))
+				 			#dummyList.append(key)
+				 			#dummyList.append(nkey)
+				 			#print "keys" ,key,  nkey
+				 			#print "dummy",coloumns[coloumns.keys()[key]] , coloumns[coloumns.keys()[nkey]]
+	"""print "dlist", dummyList
+	print "ddict", dummyDict
+	print "1",coloumns
+	for i in dummyList:
+		if i in coloumns:del coloumns[i]
+	print "2",coloumns
+	for k,v in dummyDict.items():
+		coloumns[k] = v
+	print "3", coloumns"""
 
 	
 	#templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
@@ -247,6 +261,3 @@ print "Done"
 print "PI after DRC",primeImplicants
 print "Eseesntials", EPI
 
-
-print coloumns
-print primeimplicants
