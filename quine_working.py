@@ -17,6 +17,7 @@ maxPower = 0
 countDict = defaultdict(list)
 minterms = []
 EPI = set() 
+uncovered =set()
 Variables = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"]
 
 ################################################################################################################
@@ -87,8 +88,8 @@ def DC():
 	xx = False
 	DominatedCols = list()
 	try:
-		for key1 in minterms:
-			for key2 in minterms:
+		for key1 in uncovered:
+			for key2 in uncovered:
 				if key1 is key2 or  len(countDict[key1])> len(countDict[key2]) : continue
 				else :
 					xx = True
@@ -101,12 +102,10 @@ def DC():
 						xx = True
 						deleted.add(key1)
 						DominatedCols.append(key2)
-		minterms[:] = [j for j in minterms if j not in DominatedCols]
-		for item in deleted:
-			for v in primeImplicants:
-				for i in v:
-					if item is i: temp.add(v)
-		primeImplicants [:] = [item for item in primeImplicants if item not in temp]
+		uncovered= uncovered - deleted #=[:] = [j for j in minterms if j not in DominatedCols]
+		temp = set([v for item in deleted for v in PICopy if item in v])
+		#primeImplicants [:] = [item for item in primeImplicants if item not in temp]
+		PICopy [:] = [item for item in PICopy if item not in temp]
 
 	except TypeError:
 		None
@@ -119,9 +118,10 @@ def DR():
 	set1 = set()
 	set2 = set()
 	temp = set()
-	temp1 = set()
-	for item1 in  primeImplicants:
-		for item2 in primeImplicants:
+	#for item1 in  primeImplicants:
+		#for item2 in primeImplicants:
+	for item1 in  PICopy:
+		for item2 in PICopy:
 			if item1 is item2 or len(item1) > len(item2): continue
 			else:
 				set1 = set([i for i in item1])
@@ -129,9 +129,9 @@ def DR():
 				if set1.issubset(set2):
 					flag = True
 					temp.add(item1)
-					temp1.add(item2)
-	primeImplicants [:] = [item for item in primeImplicants if item not in temp]
-	print "rows",temp
+	#primeImplicants [:] = [item for item in primeImplicants if item not in temp]
+	PICopy [:] = [item for item in PICopy if item not in temp]
+	print "rows dominated",temp
 	return flag
 
 
@@ -140,7 +140,7 @@ def DR():
 def output(str1):
 	strx = ""
 	for i in range (0,len(str1)):
-		c = str1[len(str1)-i-1]
+		c = str1[i]
 		if c is "1":
 			strx += Variables[i]
 		elif c is "0":
@@ -223,11 +223,11 @@ print "final PI:"
 PICopy = list(primeImplicants)
 for i in primeImplicants:
 	print i
-while minterms is not None:
-	flag = Ess()	
-	flag1 = DC()
-	flag2 = DR()
-	if flag is False: break
+#while minterms is not None:
+	#flag = Ess()	
+	#flag1 = DC()
+	#flag2 = DR()
+	#if flag is False: break
 print "Done"
 print "PI after DRC",primeImplicants
 print "Eseesntials", EPI
@@ -237,9 +237,9 @@ print coloumns
 print "minterm remaining", minterms
 print "primeimplicants", primeImplicants
 covered = set()
-essentials = []
+essentials = set()
 uncoveredPI = set(PICopy)
-print "cc"
+print "Minterms copy:"
 print mintermsSet
 for m in mintermsSet:
 	if m not in covered:
@@ -251,22 +251,44 @@ for m in mintermsSet:
 				if count is 1:
 					tempEssent = t
 		if count is 1:
-			essentials.append(tempEssent)
+			essentials.add(tempEssent)
 			uncoveredPI.remove(tempEssent)
 			for x in tempEssent:
 				if x in mintermsSet:
 					covered.add(x)
 print "Essential Prime Implicants:"
 print essentials
-#remaining
+print minterms
+#while minterms is not None:
+	#flag = Ess()	
+	#flag1 = DC()
+	#flag2 = DR()
+	#if flag1 is False: break
+#print "Done"
+#print "PI after DRC",PICopy
+#print "Eseesntials", EPI
+remaining = set()
 uncovered = mintermsSet - covered
 covered.clear()
-#for m in uncovered:
-	#for t in uncoveredPI:
-		#if m in t:
+for m in uncovered:
+	if m not in covered:
+		for t in uncoveredPI:
+			if m in t:
+				remaining.add(t)
+				for x in t:
+					covered.add(x)
+				break
+#print function
+#print EPI
+if minterms is not None:
+	cover = list(essentials) + list(remaining)
+else:
+	cover = primeImplicants
+print "Cover:"
 
-
-
+function [:] = [key for i in cover for key,value in coloumns.items() if value is i ]
+for i in function:
+	print output(i)
 v  = list()
 v = Variables[0:int(maxPower)]
 finalOutput = list()
