@@ -5,6 +5,8 @@ from collections import defaultdict
 from math import log, ceil
 import difflib
 from sets import Set
+Variables = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"]
+
 ################################################################################################################
 #										"""Some Variables"""
 ################################################################################################################
@@ -17,8 +19,6 @@ maxPower = 0
 countDict = defaultdict(list)
 minterms = []
 EPI = set() 
-Variables = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"]
-
 ################################################################################################################
 #										"""Functions"""
 ################################################################################################################
@@ -39,47 +39,12 @@ def iterations(count):
 				 			tkey = list(coloumns.keys()[key])
 				 			tkey [int(maxPower)-1-bitloc]= "-"
 				 			tkey = ''.join(tkey)
-				 			# print "1st item tuple ", coloumns[coloumns.keys()[key]]
-				 			# print "2nd item tuple ",coloumns[coloumns.keys()[nkey]]
-				 			# print "The tuple is ", (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# tflag = False
-				 			# if len(coloumns[coloumns.keys()[key]]) < len(coloumns[coloumns.keys()[nkey]]):
-				 			# 	for item in coloumns[coloumns.keys()[key]]:
-				 			# 		if item in  coloumns[coloumns.keys()[nkey]]:
-				 			# 			tflag = True
-				 			# 	if tflag == False:
-				 			# 		# print "The tuple is ", (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 		# taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 		# coloumns[tkey] = (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 	else:
-				 			# 		# print  "The tuple is ", coloumns[coloumns.keys()[nkey]]
-				 			# 		# taken.append(coloumns[coloumns.keys()[nkey]])
-				 			# 		# coloumns[tkey] = (coloumns[coloumns.keys()[nkey]])
-				 			# 	tflag = False
-				 			# else:
-				 			# 	for item in coloumns[coloumns.keys()[nkey]]:
-				 			# 		if item in  coloumns[coloumns.keys()[key]]:
-				 			# 			tflag = True
-				 			# 	if tflag == False:
-				 			# 		# print "The tuple is ", (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 		# taken.append(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 		# coloumns[tkey] = (coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])
-				 			# 	else:
-				 			# 		# print  "The tuple is ", coloumns[coloumns.keys()[key]]
-				 			# 		# taken.append(coloumns[coloumns.keys()[key]])
-				 			# 		# coloumns[tkey] = coloumns[coloumns.keys()[key]]
-				 			# 	tflag = False
 				 			taken.append(tuple(set(coloumns[coloumns.keys()[key]]+coloumns[coloumns.keys()[nkey]])))
 				 			coloumns[tkey] = tuple(set((coloumns[coloumns.keys()[key]] + coloumns[coloumns.keys()[nkey]])))
 	templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
 	# print "Iteration # ", count ,"templst",templst
 	return	(templst, flag)
-
-	
-	#templst = [coloumns[x] for x, v in coloumns.items() if coloumns[x] not in taken]
-	#print "Iteration # ", count ,"templst",templst
-	#return	(templst, flag)
-
+				 			
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 def Xor(n,str1, str2):
 	str1 = str1.replace("0b","")
@@ -94,7 +59,21 @@ def Xor(n,str1, str2):
 	elif(len(lstXor)==1): return lstXor[0]
 	else: return -1
 ####################################################################################################################
-def Ess():
+def DCR():
+	DominatedCols = list()
+	set1 = set()
+	set2 = set()
+	duplicates = set()
+	for v in primeImplicants:
+		for u in primeImplicants:
+			if v is u or len(v) > len (u) : continue
+			else:
+				set1 = set([i for i in v])
+				set2 = set([j for j in u])
+				if set1.issubset(set2): 
+					duplicates.add(v)
+	primeImplicants [:] = [v for v in primeImplicants if v not in duplicates]
+	print "b3d zft duplicate",primeImplicants
 	flag = False
 	deleted = list()
 	temp = list()
@@ -118,13 +97,9 @@ def Ess():
 		primeImplicants [:] = [item for item in primeImplicants if item  not in temp]
 	except TypeError:
 		None
-	return flag
-####################################################################################################3
-def DC():
 	deleted = set()
 	temp = set()
 	xx = False
-	DominatedCols = list()
 	try:
 		for key1 in minterms:
 			for key2 in minterms:
@@ -147,38 +122,11 @@ def DC():
 				for i in v:
 					if item is i: temp.add(v)
 		primeImplicants [:] = [item for item in primeImplicants if item not in temp]
-
 	except TypeError:
 		None
-		#print minterms
-
-	return xx
-
-#####################################################################################################3
-def DR():
-	flag = False
-	print "minterms",minterms
-	set1 = set()
-	set2 = set()
-	temp = set()
-	temp1 = set()
-	for item1 in  primeImplicants:
-		for item2 in primeImplicants:
-			if item1 is item2 or len(item1) > len(item2): continue
-			else:
-				set1 = set([i for i in item1])
-				set2 = set ([i for i in item2])
-				if set1.issubset(set2):
-					flag = True
-					temp.add(item1)
-					temp1.add(item2)
-	primeImplicants [:] = [item for item in primeImplicants if item not in temp]
-	print "rows",temp
-		#primeImplicants [:] = [item for item in primeImplicants if item not in temp]
+	#print minterms
+	print "b3d zft cols",primeImplicants
 	return flag
-
-
-	
 ####################################################################################################################
 def output(str1):
 	strx = ""
@@ -192,10 +140,6 @@ def output(str1):
 	if strx is "":
 		strx = "1"
 	return strx
-
-
-
-
 ####################################################################################################################
 #											"""Main"""
 ####################################################################################################################
@@ -222,7 +166,7 @@ if(dontcares != None):
 		if dontcare not in d[bin(dontcare).count("1")]:
 			d[bin(dontcare).count("1")].append(dontcare)
 			maxPower = max(maxPower,ceil(log(max(dontcares)+1,2)))
-#primeimplicants = list(list())
+primeimplicants = list(list())
 for key in sorted(d):
 	if d[key+1] is not None:
 		# print d[key]
@@ -249,71 +193,36 @@ for key in sorted(d):
 						if k!= position : xstr+= str2[k]
 						else : xstr += '-'
 					coloumns[xstr] = (i,j)
-#if minterms is not None:
-#	primeimplicants = [[x for x in minterms if x not in taken]]
+if minterms is not None:
+	primeimplicants = [[x for x in minterms if x not in taken]]
 count = 0
 epi = list()
 while flag == True:
-	# flag = False
+	flag = False
 	count += 1
 	templst,flag = iterations(count)
 	epi.append(templst)
-	# print "iteration number", count
-	# print "taken " ,taken
-	# print "coloumns " ,coloumns
-	# print "templst" , templst
-	#primeimplicants.append(taken)
 
-	# print "primeimplicants",primeimplicants
-# print "Last Iteration: ", primeimplicants
-#print "cols",coloumns
-#print "pi",primeimplicants
+	primeimplicants.append(taken)
+
 primeImplicants = []
 primeImplicants [:]= [v for k,v in coloumns.items()]
 print"primeimplicants table:"
-"""set1 = set()
-set2 = set()
-duplicates = set()
-for v in primeImplicants:
-	for u in primeImplicants:
-		if v is u or len(v) > len (u) : continue
-		else:
-			set1 = set([i for i in v])
-			set2 = set([j for j in u])
-			if set1.issubset(set2): 
-				duplicates.add(v)
-primeImplicants [:] = [v for v in primeImplicants if v not in duplicates]"""
+
 print "final PI:"
 for i in primeImplicants:
 	print i
-while minterms is not None:
-	flag = Ess()	
-	flag1 = DC()
-	flag2 = DR()
+while (True):
+	if minterms is not None:
 
-print "Done"
-print "PI after DRC",primeImplicants
-print "Eseesntials", EPI
+		flag = DCR()
+		print "mintermssssss",minterms
+		print "prrrrrr",primeImplicants
+	if flag is False: break
+EPI.update(set(primeImplicants))
+
 function = []
 function [:] = [key for i in EPI for key,value in coloumns.items() if value is i ]
-print coloumns
-print "minterm remaining", minterms
-print "primeimplicants", primeImplicants
-setX1 = set()
-"""setX2 = set()
-minTaken = set()
-for i in range(len(minterms)-1,0,-1):
-	setX1 = set(m for m in minterms[0:i] if m not in minTaken)
-	for item in primeImplicants:
-		setX2 = set([c for c in item])
-		if setX1.issubset(setX2): 
-			minTaken += list(setX1)"""
-
-
-
-
-
-
 v  = list()
 v = Variables[0:int(maxPower)]
 finalOutput = list()
@@ -329,8 +238,3 @@ else:
 	print " "
 
 
-"""for i in range (0,len(function)):
- 	print output(function[i]),
- 	if i is not len(function)-1:
- 		print "+", 
- print """" "
