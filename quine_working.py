@@ -223,19 +223,11 @@ print "final PI:"
 PICopy = list(primeImplicants)
 for i in primeImplicants:
 	print i
-<<<<<<< HEAD
 #while minterms is not None:
 	#flag = Ess()	
 	#flag1 = DC()
 	#flag2 = DR()
 	#if flag is False: break
-=======
-while minterms is not None:
-	flag = Ess()	
-	flag1 = DC()
-	flag2 = DR()
-
->>>>>>> 5965d27f9e118e12548d103443aaa72cd7ce7248
 print "Done"
 print "PI after DRC",primeImplicants
 print "Eseesntials", EPI
