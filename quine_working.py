@@ -159,6 +159,9 @@ mintermsSet = set()
 PICopy = []
 try:
 	minterms = map(int , raw_input().split(","))
+	while min(minterms) < 0 or max(minterms) >= 2**16:
+		print "Minterms: Should be between 0 and 2^16"
+		minterms = map(int , raw_input().split(","))
 	mintermsSet = set(minterms)
 except ValueError:
 	minterms = None
@@ -170,6 +173,9 @@ if minterms is not None:
 print "Don't Cares:"
 try:
 	dontcares = map(int , raw_input().split(","))
+	while min(dontcares) < 0 or max(dontcares) >= 2**16:
+		print "Don`t Cares: Should be between 0 and 2^16"
+		dontcares = map(int , raw_input().split(","))
 except ValueError:
 	dontcares = None
 if(dontcares != None):
@@ -200,7 +206,10 @@ for key in sorted(d):
 						if k!= position : xstr+= str2[k]
 						else : xstr += '-'
 					coloumns[xstr] = (i,j)
-primeimplicants = [x for x in minterms if x not in taken]
+try:
+	primeimplicants = [x for x in minterms if x not in taken]
+except TypeError:
+	None
 count = 0
 while flag == True:
 	count += 1
@@ -223,13 +232,16 @@ for v in primeImplicants:
 			if set1.issubset(set2): 
 				duplicates.add(v)
 primeImplicants [:] = [v for v in primeImplicants if v not in duplicates]
-for x in minterms:
- 	if x not in taken:
- 		essentials.add(x)
- 		tstr = bin(x).replace("0b","")
-		tstr = ''.join(['0']*(int(maxPower)-len(tstr))) + tstr
-		coloumns[tstr] = (x)
-		print tstr
+try:
+	for x in minterms:
+	 	if x not in taken:
+	 		essentials.add(x)
+	 		tstr = bin(x).replace("0b","")
+			tstr = ''.join(['0']*(int(maxPower)-len(tstr))) + tstr
+			coloumns[tstr] = (x)
+			print tstr
+except TypeError:
+	None
 print "final PI:"
 PICopy = list(primeImplicants)
 for i in primeImplicants:
