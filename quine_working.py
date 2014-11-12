@@ -18,6 +18,8 @@ countDict = defaultdict(list)
 minterms = []
 EPI = set() 
 uncovered =set()
+covered = set()
+essentials = set()
 Variables = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"]
 
 ################################################################################################################
@@ -198,12 +200,14 @@ for key in sorted(d):
 						if k!= position : xstr+= str2[k]
 						else : xstr += '-'
 					coloumns[xstr] = (i,j)
+primeimplicants = [x for x in minterms if x not in taken]
 count = 0
 while flag == True:
 	count += 1
 	flag = iterations(count)
 primeImplicants = []
 primeImplicants [:]= [v for k,v in coloumns.items()]
+# print primeImplicants
 """print"primeimplicants table:"
 for i in primeImplicants:
 	print i"""
@@ -219,25 +223,27 @@ for v in primeImplicants:
 			if set1.issubset(set2): 
 				duplicates.add(v)
 primeImplicants [:] = [v for v in primeImplicants if v not in duplicates]
+for x in minterms:
+ 	if x not in taken:
+ 		essentials.add(x)
+ 		tstr = bin(x).replace("0b","")
+		tstr = ''.join(['0']*(int(maxPower)-len(tstr))) + tstr
+		coloumns[tstr] = (x)
+		print tstr
 print "final PI:"
 PICopy = list(primeImplicants)
 for i in primeImplicants:
 	print i
-#while minterms is not None:
-	#flag = Ess()	
-	#flag1 = DC()
-	#flag2 = DR()
-	#if flag is False: break
 print "Done"
 print "PI after DRC",primeImplicants
 print "Eseesntials", EPI
 function = []
 function [:] = [key for i in EPI for key,value in coloumns.items() if value is i ]
+print "********************"
 print coloumns
+print "********************"
 print "minterm remaining", minterms
 print "primeimplicants", primeImplicants
-covered = set()
-essentials = set()
 uncoveredPI = set(PICopy)
 print "Minterms copy:"
 print mintermsSet
@@ -280,14 +286,15 @@ for m in uncovered:
 				break
 #print function
 #print EPI
+print essentials
 if minterms is not None:
 	cover = list(essentials) + list(remaining)
 else:
-	cover = primeImplicants
+	cover = primeImplicants 
 print "Cover:"
-
 function [:] = [key for i in cover for key,value in coloumns.items() if value is i ]
 for i in function:
+	print i
 	print output(i)
 v  = list()
 v = Variables[0:int(maxPower)]
