@@ -1,0 +1,5 @@
+<Alloy>
+    <Window id="win" backgroundColor="white">
+        <TextField id="textField" borderStyle="Ti.UI.INPUT_BORDERSTYLE_ROUNDED" color="#FFFFFF" top="10" left="10" width="250" height="60" />
+    </Window>
+</Alloy>
